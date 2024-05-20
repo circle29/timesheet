@@ -1,0 +1,38 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+model User {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  rate     Int       @default(100000)
+  timesheets Timesheet[]
+}
+
+model Project {
+  id           Int         @id @default(autoincrement())
+  projectName  String      @unique
+  timesheets   Timesheet[]
+}
+
+model Timesheet {
+  id         Int      @id @default(autoincrement())
+  projectId  Int
+  userId     Int
+  startDate  DateTime
+  endDate    DateTime
+  startTime  DateTime
+  endTime    DateTime
+  duration   Int
+  activityName String 
+  rate       Int
+  income     Int
+  project    Project  @relation(fields: [projectId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+}
